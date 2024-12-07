@@ -27,9 +27,19 @@ document.getElementById("signup-form").addEventListener("submit", async (e) => {
   }
 });
 
+// Navigation handlers
+document.getElementById("register-btn").addEventListener("click", showSignup);
+document.getElementById("back-to-login-btn").addEventListener("click", showLogin);
+
 function showLogin() {
   document.getElementById("login-container").classList.remove("hidden");
   document.getElementById("signup-container").classList.add("hidden");
+  document.getElementById("dashboard-container").classList.add("hidden");
+}
+
+function showSignup() {
+  document.getElementById("login-container").classList.add("hidden");
+  document.getElementById("signup-container").classList.remove("hidden");
   document.getElementById("dashboard-container").classList.add("hidden");
 }
 
