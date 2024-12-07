@@ -1,3 +1,16 @@
+// Display accounts on the dashboard
+async function fetchAccounts() {
+  const accounts = await apiCall("/accounts", "GET");
+  const accountList = document.getElementById("account-list");
+  accountList.innerHTML = "";
+  accounts.forEach(account => {
+    const li = document.createElement("li");
+    li.textContent = `${account.name} (${account.currency}): $${account.balance}`;
+    accountList.appendChild(li);
+  });
+}
+
+// Add a new account
 document.getElementById("add-account-form").addEventListener("submit", async (e) => {
   e.preventDefault();
   const name = document.getElementById("account-name").value;
@@ -7,30 +20,13 @@ document.getElementById("add-account-form").addEventListener("submit", async (e)
   try {
     await apiCall("/accounts", "POST", { name, currency, balance });
     alert("Account added!");
-    fetchAccounts();
+    fetchAccounts(); // Re-fetch accounts after adding a new one
   } catch (error) {
     alert(error.message);
   }
 });
 
-async function fetchAccounts() {
-  try {
-    const accounts = await apiCall("/accounts");
-    const list = document.getElementById("account-list");
-    list.innerHTML = accounts
-      .map((account) => `<li>${account.name} (${account.currency}): ${account.balance}</li>`)
-      .join("");
-  } catch (error) {
-    alert(error.message);
-  }
+// Fetch accounts when the dashboard is displayed
+if (localStorage.getItem("token")) {
+  fetchAccounts();
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    showDashboard();
-    fetchAccounts();
-  } else {
-    showLogin();
-  }
-});
